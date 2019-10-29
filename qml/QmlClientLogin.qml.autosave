@@ -18,12 +18,12 @@ Rectangle {
     Component.onCompleted: {
 
         if(!systemSettings.isAutoLogin)//选中时checked为false
-            s_Login(setting1s.strIp.toString(),setting1s.strPort.toString(),setting1s.strAcc.toString(),setting1s.strPwd.toString())
+            s_Login(loaclsetting.strIp.toString(),loaclsetting.strPort.toString(),loaclsetting.strAcc.toString(),loaclsetting.strPwd.toString())
     }
 
 
     Settings{
-        id:setting1s
+        id:loaclsetting
 //        property alias sFilePath: inputacc.text
 //        property alias rFilePath: inputpwd.text
         property alias strAcc: inputacc.text
@@ -31,7 +31,6 @@ Rectangle {
         property alias strIp: inputSerIp.text
         property alias strPort: inputSerPort.text
         property alias isRemPwd:checkedRemPwd.checked
-
     }
 
     Settings{
@@ -186,7 +185,7 @@ Rectangle {
 
                 textColor: "#999999"
                 placeholderText: qsTr("enter password")
-                text:setting1s.strPwd//admin
+                text:loaclsetting.strPwd//admin
                 style:TextFieldStyle {
                     textColor: "black"
                     background: Rectangle {
@@ -310,11 +309,11 @@ Rectangle {
 
             onClicked:{
 
-                if(checkedRemPwd.checked){
-                    setting1s.strPwd = ""
-                }else{
-                    setting1s.strPwd = inputpwd.text.toString();
-                }
+                if(checkedRemPwd.checked)
+                    loaclsetting.strPwd = ""
+                else
+                    loaclsetting.strPwd = inputpwd.text.toString();
+                
 
                 s_Login(inputSerIp.text.toString(),inputSerPort.text.toString(),inputacc.text.toString(),inputpwd.text.toString())
             }

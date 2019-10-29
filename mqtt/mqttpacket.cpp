@@ -40,6 +40,8 @@ QByteArray MqttPacket::makePacket(QString cmd,QVariant msgContent)
         jObjectData.insert("username",msgContent.toMap().value("username").toString());
         jObjectData.insert("password",msgContent.toMap().value("password").toString());
         jObject.insert("data",jObjectData);
+    }else if (cmd.compare("loginoutmainserver")==0) {
+
     }else if(cmd.compare("modifyusrpasswd")==0){
 
         QJsonObject jObjectData ;
@@ -116,9 +118,6 @@ QMap<QString,QVariant> MqttPacket::unPacket(QString topic,QByteArray arr)
     }else if(cmd.compare("modifyusrpasswd")==0){
 
 
-        map.insert("statuscode",jsDoc.object().value("statuscode").toString());
-
-
     }else if(cmd.compare("getdevicelist")==0){
 
         unPacketGetDevicelist(map,jsDoc);
@@ -136,6 +135,8 @@ QMap<QString,QVariant> MqttPacket::unPacket(QString topic,QByteArray arr)
         map.insert("mediatoken",jObjectData.value("mediatoken").toString());
         map.insert("hostip",jObjectData.value("hostip").toString());
         map.insert("mediatoken",jObjectData.value("mediatoken").toString());
+
+    }else if (cmd.compare("loginoutmainserver")==0) {
 
     }
 

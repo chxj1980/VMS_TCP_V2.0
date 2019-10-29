@@ -16,6 +16,8 @@ Rectangle {
     signal s_multiScreenNumChange(int num);
 
     signal s_mqttLoginSucc();
+    signal s_mqttLoginOutSucc();
+    signal s_modifyPwd(bool isSuccs,string str);
     property int multiScreenNum: 2
     property int premultiScreenNum: 2
 
@@ -24,7 +26,9 @@ Rectangle {
 
     property bool isMax: false
 
-
+    QmlDialogTip{
+        id:tip
+    }
 
     MqttWork{
         id:mqttwork
@@ -36,15 +40,20 @@ Rectangle {
                 st_showToastMsg(qsTr("mqtt服务器连接失败"))
         }
         onSignal_login: {
-
-            console.debug(errStr)
             st_showToastMsg(errStr)
-            if(isLogiged){
-
+            if(isLogiged)
                 s_mqttLoginSucc();
-            }
-
         }
+
+        onSignal_loginout: {
+            if(isSucc){
+                s_mqttLoginOutSucc();
+                st_showToastMsg(errStr)
+            }else
+                st_showToastMsg(errStr)
+        }
+
+        onSignal_modifyPwd:s_modifyPwd(isSucc,errStr)
 
         onSignal_listdevice: {
             var groudIndex = -1;
@@ -100,12 +109,11 @@ Rectangle {
 
 
 
-    function mqttLogin(ip,port,cc,pwd){
+    function mqttLogin(ip,port,cc,pwd) {mqttwork.funLogin(ip,port,cc,pwd);}
 
-        mqttwork.funLogin(ip,port,cc,pwd);
+    function mqttModifyPwd(usrname,oldpwd,newpwd){var data={ "username":usrname,"oldpassword":oldpwd,"newpassword":newpwd};mqttwork.publishMsg("modifyusrpasswd",data);}
 
-    }
-
+    function mqttLoginOut(){var data={};mqttwork.publishMsg("loginoutmainserver",data);}
 
     Rectangle{
 

@@ -2,7 +2,7 @@
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.12
 import QtQml 2.12
-
+import Qt.labs.settings 1.0
 
 Window {
 
@@ -36,6 +36,7 @@ Window {
     visibility : "Maximized"
     color: "#BDBDBD"
 
+    property string sysUerName: ""
 
     onVisibilityChanged: {
 
@@ -49,6 +50,12 @@ Window {
 
     }
 
+    Settings{
+        id:systemSettings
+
+
+
+    }
     Rectangle{
         id:rect
 
@@ -64,23 +71,23 @@ Window {
             z:2
             onWinMin: {
 
+
                if(main.visibility === 4)
                     isSpecilState = true;
 
                 main.visibility = "Minimized"
             }
             onWinMax: {
-
                 if(main.visibility === 2)
                     main.visibility = "Maximized"
-
                 else if(main.visibility === 4)
                     main.visibility = "Windowed"
-
             }
             onWinClose:Qt.quit();
             onDragPosChange:setDlgPoint(mx,my);
             onS_systemConfiguration: config.visible = true
+            onS_modifyPwd: modifypwd.open();
+            onS_exitLogin: mhomecontent.mqttLoginOut()
         }
         HomeStateBar{
 
@@ -93,7 +100,6 @@ Window {
             onS_multiScreenNumChange: {
                 //几乘几的屏幕显示
                 //mhomecontent.setMultiScreen(num);
-
                 if(num < 5)
                     mhomecontent.setMultiScreenNum (num);
 
@@ -108,19 +114,12 @@ Window {
             z:1
 
             onS_addDevice: myDlgAddDevice.open();
-
             onSt_showToastMsg: showToast(str1)
-
             onS_multiScreenNumChange:mhomeState.setSelectItem (num)
-
-            onS_mqttLoginSucc: {
-
-                clientLogin.visible = false;
-            }
-
+            onS_mqttLoginSucc: clientLogin.visible = false;
+            onS_mqttLoginOutSucc:clientLogin.visible = true;
+            onS_modifyPwd:modifypwd.modifyCallback(isSuccs,str);
         }
-
-
 
         SystemConfig{
             id:config
@@ -128,8 +127,13 @@ Window {
             anchors.left: parent.left
             width: parent.width
             height: parent.height - mTitleBar.height -2
-            z:4
 
+            z:4
+        }
+
+        ModifyPwd{
+            id:modifypwd
+            onS_modifyPwd: mhomecontent.mqttModifyPwd(sysUerName,oldpwd1,newpwd1)
         }
 
     }
@@ -137,21 +141,12 @@ Window {
 
     QmlClientLogin{
         id:clientLogin
-
         onS_Login: {
-
+             sysUerName = accout;
              mhomecontent.mqttLogin(ip,port,accout,pwd)
         }
 
     }
-//    QmlLogin{
-//        id:myLogin
-//        visible: true
-//        onS_Login: {
-//            mhomecontent.mqttLogin(ip,port,accout,pwd)
-//        }
-
-//    }
 
     Loader{
         id:loaderToast

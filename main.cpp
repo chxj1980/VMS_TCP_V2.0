@@ -5,7 +5,7 @@
 #include "XVideo.h"
 #include "qmllanguage.h"
 #include "ccrashstack.h"
-
+#include "systemattributes.h"
 #include "mqtt/mqttwork.h"
 
 
@@ -54,6 +54,12 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Gaozhi"); //1
     app.setOrganizationDomain("gaozhi.com"); //2
     app.setApplicationName("VMS_V1.2"); //3
+
+
+
+    SystemAttributes attributes;
+    engine.rootContext()->setContextProperty("systemAttributes", &attributes);
+
 
     QFont font("arial",15);
     app.setFont(font);

@@ -19,11 +19,13 @@ Rectangle {
     signal dragPosChange(var mx,var my);
 
     signal s_systemConfiguration();
-    signal s_exit();
+    signal s_exitLogin();
     signal s_about();
     signal s_help();
+    signal s_modifyPwd();
 
-    property var pathMapping : {"system Configuration":"qrc:/images/systemConfig.png","exit system":"qrc:/images/exit.png","about":"qrc:/images/about.png","help":"qrc:/images/help.png"}
+    property var pathMapping : {"system Configuration":"qrc:/images/systemConfig.png","exit login":"qrc:/images/exit.png","about":"qrc:/images/about.png",
+        "help":"qrc:/images/help.png","modify password":"qrc:/images/modifyPwd.png"}
 
     Rectangle {
         anchors.fill: parent
@@ -124,8 +126,8 @@ Rectangle {
                 Action { text: qsTr("system Configuration"); checkable: true }
                 Action { text: qsTr("about"); checkable: true; checked: true }
                 Action { text: qsTr("help"); checkable: true; checked: true }
-                Action { text: qsTr("exit system"); checkable: true; checked: true }
-
+                Action { text: qsTr("exit login"); checkable: true; checked: true }
+                Action { text: qsTr("modify password"); checkable: true; checked: true }
 
                 topPadding: 2
                 bottomPadding: 2
@@ -166,8 +168,10 @@ Rectangle {
 
                         if(menuItem.text === "system Configuration")
                             s_systemConfiguration()
-                        else if(menuItem.text === "exit system")
-                            s_exit();
+                        else if(menuItem.text === "exit login")
+                            s_exitLogin();
+                        else if(menuItem.text === "modify password")
+                            s_modifyPwd();
 
                     }
                 }

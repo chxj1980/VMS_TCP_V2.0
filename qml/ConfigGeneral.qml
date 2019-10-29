@@ -3,7 +3,6 @@ import QtQuick.Controls 1.4
 
 Rectangle {
 
-
     Rectangle{
         id:label_login
         color: "#d3dfc1"
@@ -25,23 +24,30 @@ Rectangle {
         }
     }
 
+
     Row{
 
         id:config_login
         anchors.top: label_login.bottom
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
-       // width: label_login.width
-
         height: 50
         spacing: 50
-        QmlCheck {
-            id:checkboxAlogin
+//        QmlCheck {
+//            id:checkboxAlogin
 
-            anchors.verticalCenter: parent.verticalCenter
-            checked: false
-            text: qsTr("login automatically")
-        }
+//            anchors.verticalCenter: parent.verticalCenter
+//            checked: systemAttributes.isAutoLogin
+//            text: qsTr("login automatically")
+
+//            onCheckedChanged: {
+
+
+//                systemAttributes.setisAutoLogin(checked)
+
+//                console.debug("comPar onCheckedChanged  "+checked + "   "+systemAttributes.isAutoLogin)
+//            }
+//        }
 
         QmlCheck {
             id:checkboxAboot
@@ -49,6 +55,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             checked: false
             text: qsTr("boot automatically")
+
+
         }
 
         QmlCheck {

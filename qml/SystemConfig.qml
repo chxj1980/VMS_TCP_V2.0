@@ -5,8 +5,9 @@ import QtQuick.Window 2.2
 Rectangle {
 
     id:root
-
     visible: false
+
+
 
     ConfigTabbar{
         id: bar
@@ -29,6 +30,7 @@ Rectangle {
         currentIndex: bar.currentIndex
 
         ConfigGeneral{
+            id:configerneral
 
 
         }

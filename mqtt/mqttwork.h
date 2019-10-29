@@ -25,6 +25,8 @@ signals:
     void signal_listdevice(QVariant variant);
     void signal_listSer(QVariant variant);
     void signal_DeviceInfo(QVariant variant);
+    void signal_modifyPwd(bool isSucc,QString errStr);
+    void signal_loginout(bool isSucc,QString errStr);
 public slots:
 
     void slot_disConneted();

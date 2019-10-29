@@ -44,7 +44,8 @@ HEADERS += \
     VideoManagement/mp4format.h \
     p2p/p2pworker.h \
     mqtt/mqttpacket.h \
-    mqtt/mqttwork.h
+    mqtt/mqttwork.h \
+    systemattributes.h
 
 SOURCES += main.cpp \
     qmllanguage.cpp \

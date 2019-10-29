@@ -99,5 +99,10 @@
         <file>qml/ConfigVedio.qml</file>
         <file>images/fileopen.png</file>
         <file>qml/QmlButton.qml</file>
+        <file>images/modifyPwd.png</file>
+        <file>qml/ModifyPwd.qml</file>
+        <file>qml/QmlDialogTip.qml</file>
+        <file>images/error.png</file>
+        <file>images/warn.png</file>
     </qresource>
 </RCC>

@@ -130,8 +130,6 @@ void MqttWork::slot_receMsg(const QByteArray &message, const QMqttTopicName topi
 
 
     if(map.value("cmd").toString().compare("loginmainserver")==0){
-
-
         if(map.value("statuscode").toInt()==200)
             emit signal_login(true,"login successful");
         else if (map.value("statuscode").toInt()==401)
@@ -159,20 +157,28 @@ void MqttWork::slot_receMsg(const QByteArray &message, const QMqttTopicName topi
 
         QVariantList listDev =  map.value("devicelist").toList();
 
-
         emit signal_listdevice(map);
         for(int i=0;i<listDev.count();i++){;
 
             QVariantMap variant = listDev.at(i).toMap();
-
             publishMsg("getmediaserverbasicinfo",variant);
-
         }
-
     }else if (map.value("cmd").toString().compare("getmediaserverbasicinfo")==0){
-
-
         emit signal_DeviceInfo(map);
+    }else if (map.value("cmd").toString().compare("modifyusrpasswd")==0) {
+        int statuscode = map.value("statuscode").toInt();
+        if(statuscode == 200)
+            signal_modifyPwd(true,tr("Successfully modified"));
+        else if(statuscode == 401)
+            signal_modifyPwd(false,tr("Password modification failed! Authentication failure"));
+        else
+            signal_modifyPwd(false,tr("Password modification failed!"));
+    }else if (map.value("cmd").toString().compare("loginoutmainserver")==0) {
+        int statuscode = map.value("statuscode").toInt();
+        if(statuscode == 200)
+            signal_loginout(true,tr("Successfully exit"));
+        else
+            signal_loginout(false,tr("exit failed!"));
     }
 
 }
