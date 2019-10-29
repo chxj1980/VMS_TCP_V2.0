@@ -27,11 +27,31 @@ public:
     QImage *pImg;
     quint64 time;
 };
+
+#define QML_PROPERTY(type, name, READ, getter, WRITE, setter, NOTIFY, notifyer)  type m_##name; \
+    Q_PROPERTY(type name READ getter WRITE setter NOTIFY notifyer) \
+    public: type getter() const { return m_##name;} \
+    public Q_SLOTS: void setter(type arg) { m_##name = arg; emit notifyer(arg);} \
+    Q_SIGNALS:  \
+        void notifyer(type arg);\
+    private:
+
 class XVideo : public QQuickItem
 {
     Q_OBJECT
-public:
+    //控制属性
+    //QML_PROPERTY(bool isPlayAudio READ isPlayAudio WRITE setisPlayAudio NOTIFY isPlayAudioChanged);
+    QML_PROPERTY(int,isAuthenticationSucc, READ, isAuthenticationSucc, WRITE, setisAuthenticationSucc, NOTIFY, isAuthenticationSuccChanged)//鉴权成功则判断视频流即将更新
 
+    //媒体信息属性
+    QML_PROPERTY(int ,mediaVedioW, READ, mediaVedioW, WRITE, setmediaVedioW, NOTIFY, mediaVedioWChanged)
+    QML_PROPERTY(int ,mediaVedioH, READ, mediaVedioH, WRITE, setmediaVedioH ,NOTIFY, mediaVedioHChanged)
+
+    //系统属性
+    QML_PROPERTY(QString, shotScreenPath, READ ,shotScreenPath, WRITE ,setshotScreenPath, NOTIFY ,shotScreenPathChanged)
+    QML_PROPERTY(QString, recordScreenPath, READ, recordScreenPath, WRITE, setrecordScreenPath ,NOTIFY, recordScreenPathChanged)
+
+public:
     Q_INVOKABLE void sendAuthentication(QString did,QString name,QString pwd);
     Q_INVOKABLE void connectServer(QString ip,QString port);
     Q_INVOKABLE void disConnectServer();
@@ -55,7 +75,7 @@ signals:
     void signal_loginStatus(QString msg);
     void signal_waitingLoad(QString msgload);
     void signal_endLoad();
-    void signal_videoDataUpdate();
+    void signal_videoDataUpdate(bool isSucc);
     //audio
     void signal_stopPlayAudio();
     void signal_startPlayAudio();
@@ -83,7 +103,7 @@ public slots:
     void slot_recMsg(MsgInfo *msg);//所有其他类的消息都先到此
     void slot_recH264(char *buff,int len,quint64 time);
     void slot_recPcmALaw(char *buff,int len,quint64 time);
-    void slot_recCurDid(QString str);
+    void slot_authentication(bool isSucc);
 
     void slot_reconnectP2p();
 
@@ -131,7 +151,7 @@ private:
 
     QList<ImageInfo> listImgInfo;
     QImage *m_Img;
-    QString curVedioStreamID;
+
 
 
     bool isImgUpdate;

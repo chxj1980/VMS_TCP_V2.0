@@ -69,7 +69,7 @@ void XVideo::initVariable()
     isStartRecord = false;
 
     m_Img = new QImage();
-    curVedioStreamID = "";
+
 
     m_Img->fill(QColor("black"));
     preAudioTime = 0;
@@ -169,7 +169,7 @@ void XVideo::createTcpThread()
 
     connect(worker,&TcpWorker::signal_sendH264,this,&XVideo::slot_recH264,Qt::DirectConnection);
     connect(worker,&TcpWorker::signal_sendPcmALaw,this,&XVideo::slot_recPcmALaw,Qt::DirectConnection);
-    connect(worker,&TcpWorker::signal_sendCurDid,this,&XVideo::slot_recCurDid);
+    connect(worker,&TcpWorker::signal_authentication,this,&XVideo::slot_authentication,Qt::DirectConnection);
 
     connect(worker,&TcpWorker::signal_sendMsg,this,&XVideo::slot_recMsg);
 
@@ -476,14 +476,19 @@ void XVideo::slot_recH264(char* h264Arr,int arrlen,quint64 time)
     }
 }
 
-void XVideo::slot_recCurDid(QString str)
+void XVideo::slot_authentication(bool isSucc)
 {
-    if(str.compare(curVedioStreamID)!=0){
-        curVedioStreamID = str;
-        emit signal_videoDataUpdate();
 
+    while(listImgInfo.size() >4){
+        ImageInfo imgInfo = listImgInfo.last();
+        QImage *Img = imgInfo.pImg;
+        if(Img != nullptr && (!Img->isNull()))
+            delete Img;
+
+        listImgInfo.removeLast();
     }
 
+    emit signal_videoDataUpdate(isSucc);
 }
 
 
@@ -537,7 +542,6 @@ void XVideo::slot_trasfer_endLoad()
 {
     emit signal_endLoad();
 }
-
 
 XVideo::~XVideo()
 {

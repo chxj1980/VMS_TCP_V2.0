@@ -38,7 +38,7 @@ signals:
     void signal_sendH264(char* vH264Arr,int arrLen,long long pts);
     void signal_sendPcmALaw(char* PcmALawArr,int arrLen,long long pts);
     void signal_sendPreparePlayAudio(int samplerate,int prenum,int bitwidth,int soundmode,long pts);
-    void signal_sendCurDid(QString str);
+    void signal_authentication(bool str);
 
     void signal_sendMsg(MsgInfo *info);
 

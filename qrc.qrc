@@ -83,5 +83,21 @@
         <file>images/loginFrame.png</file>
         <file>images/device_offline.png</file>
         <file>images/device_online.png</file>
+        <file>images/exit.png</file>
+        <file>images/about.png</file>
+        <file>images/help.png</file>
+        <file>images/systemConfig.png</file>
+        <file>qml/SystemConfig.qml</file>
+        <file>qml/ConfigTabbar.qml</file>
+        <file>images/config_common.png</file>
+        <file>images/config_common_g.png</file>
+        <file>images/config_location.png</file>
+        <file>images/config_location_g.png</file>
+        <file>qml/ConfigGeneral.qml</file>
+        <file>qml/QmlCheck.qml</file>
+        <file>qml/QmlSpinBox.qml</file>
+        <file>qml/ConfigVedio.qml</file>
+        <file>images/fileopen.png</file>
+        <file>qml/QmlButton.qml</file>
     </qresource>
 </RCC>

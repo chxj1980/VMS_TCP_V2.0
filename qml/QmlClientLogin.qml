@@ -171,71 +171,27 @@ Rectangle {
             }
         }
 
-
-        CheckBox{
+        QmlCheck{
             id:checkedRemPwd
             anchors.left:rectPwd.left
             anchors.leftMargin: 5
             anchors.top: rectPwd.bottom
             anchors.topMargin: 10
             text: "Remember password"
-
-            onCheckedChanged: {
-
-
-
-            }
-
-            style: CheckBoxStyle {
-                indicator:
-                    Image {
-                    width: 20
-                    height: 20
-                    source: control.checked?"qrc:/images/client_remPwd.png":"qrc:/images/client_remPwd_S.png"
-                }
-
-                label: Text {
-                    text: control.text
-                    font.family: "Roboto-Medium"
-                    font.pointSize: 12
-                    color: control.checked ? "#9B9B9B" : "#000000"
-                    verticalAlignment: Text.AlignVCenter
-
-                }
-            }
+            indImg: "qrc:/images/client_remPwd.png"
+            indImgPressed: "qrc:/images/client_remPwd_S.png"
 
         }
-        CheckBox{
+
+        QmlCheck{
             id:checkedAutoLogin
             anchors.right:rectPwd.right
             anchors.rightMargin: 5
             anchors.top: rectPwd.bottom
             anchors.topMargin: 10
             text: "Auto login"
-
-            onCheckedChanged: {
-
-
-
-            }
-
-            style: CheckBoxStyle {
-                indicator:
-                    Image {
-                    width: 20
-                    height: 20
-                    source: control.checked?"qrc:/images/client_remPwd.png":"qrc:/images/client_remPwd_S.png"
-                }
-
-                label: Text {
-                    text: control.text
-                    font.family: "Roboto-Medium"
-                    font.pointSize: 12
-                    color: control.checked ? "#9B9B9B" : "#000000"
-                    verticalAlignment: Text.AlignVCenter
-
-                }
-            }
+            indImg:"qrc:/images/client_remPwd.png"
+            indImgPressed: "qrc:/images/client_remPwd_S.png"
 
         }
 
@@ -291,8 +247,6 @@ Rectangle {
             }
         }
 
-
-
         TextField {
             id:inputSerPort
             width: 114
@@ -313,7 +267,7 @@ Rectangle {
             }
         }
 
-        Button{
+        QmlButton{
             id:btnLogin
             width: 360
             height: 50
@@ -321,31 +275,12 @@ Rectangle {
             anchors.topMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Sign in"
-            style:ButtonStyle{
 
-                background: Rectangle {
-                    width: 360
-                    height: 50
-                    radius: 10
-                    color: control.pressed?"#aa476BFD":"#476BFD"
-                }
-                label: Text {
-                    id: txt
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-
-                    text:control.text
-                    color: "#ffffff"
-                }
-
-            }
-
-            onClicked: {
-
+            onClicked:
                 s_Login(inputSerIp.text.toString(),inputSerPort.text.toString(),inputacc.text.toString(),inputpwd.text.toString())
 
-            }
         }
+
 
     }
 }

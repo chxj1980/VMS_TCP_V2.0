@@ -1,7 +1,10 @@
 import QtQuick 2.0
 import XVideo 1.0
 import QtQuick.Controls 1.4
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 Rectangle {
+    id:root
 
     signal doubleClick(bool isFullScreen);
     signal click();
@@ -13,7 +16,7 @@ Rectangle {
     property string mID: ""
     property string mAcc: ""
     property string mPwd: ""
-    property bool mIsUpdateStreamData: false
+    property bool mIsUpdateFinished: false
     property bool mIsPlayAudio: false
     property bool mIsSelected: false
     property bool mIsRecordVedio: false
@@ -22,6 +25,63 @@ Rectangle {
     border.color: mIsSelected?"red":"white"
     border.width: 2
     onMIsPlayAudioChanged: if(mIsPlayAudio)video.funPlayAudio(mXVideoPlayAudio)
+    Menu {
+        id: menu1
+
+        Action { text: qsTr("system Configuration"); checkable: true }
+        Action { text: qsTr("exit system"); checkable: true; checked: true }
+        Action { text: qsTr("about"); checkable: true; checked: true }
+        Action { text: qsTr("help"); checkable: true; checked: true }
+
+        topPadding: 2
+        bottomPadding: 2
+
+        delegate: MenuItem {
+            id: menuItem
+            implicitWidth: 140
+            implicitHeight: 40
+
+            indicator: Image {
+                id: name1
+                anchors.verticalCenter: parent.verticalCenter
+                width: 32
+                height: 32
+                //source: strToimg(menuItem.text)
+            }
+
+            contentItem: Text {
+                leftPadding: menuItem.indicator.width
+                rightPadding: menuItem.arrow.width
+                text: menuItem.text
+                font.pixelSize: 10
+                font.family: "PingFang-SC-Medium"
+                opacity: enabled ? 1.0 : 0.3
+                color: menuItem.highlighted ? "#ffffff" : "#000000"
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            background: Rectangle {
+                implicitWidth: 140
+                implicitHeight: 40
+                opacity: enabled ? 1 : 0.3
+                color: menuItem.highlighted ? "#dbdbdb" : "transparent"
+            }
+
+            onTriggered: {
+
+
+            }
+        }
+
+        background: Rectangle {
+            implicitWidth: 200
+            implicitHeight: 40
+            color: "#ffffff"
+            //border.color: "#7dc5eb"
+            radius: 2
+        }
+   }
 
     XVideo{
         id:video
@@ -32,25 +92,41 @@ Rectangle {
             anchors.fill: parent
             hoverEnabled: true
             propagateComposedEvents:true
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            onClicked:{
 
-            onClicked: click();
+                if (mouse.button == Qt.RightButton) { // 右键菜单
+                    menu1.x = root.x
+                    menu1.y = root.y
+                    menu1.popup();
+
+                }else if(mouse.button == Qt.LeftButton)
+                    click();
+
+
+
+            }
 
             onDoubleClicked: doubleClick(true);
-
         }
 
         Image {
             id: img_delete
             x:parent.x + parent.width - img_delete.width
-            visible:  (mIsUpdateStreamData && mIsSelected) ? true:false
+            visible:  (mIsUpdateFinished && mIsSelected) ? true:false
             source: "qrc:/images/img_delete.png"
 
             MouseArea{
                 anchors.fill: parent
                 enabled: true
 
-                onClicked:mIsShowWait = false;
+                onClicked:{
 
+                    mIsUpdateFinished = false
+                    mIsShowWait = false;
+
+
+                }
 
                 onDoubleClicked: {
 
@@ -66,8 +142,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height > 5*50?50:0
             width: parent.width-8
-
-            visible: mIsUpdateStreamData
+            visible: mIsUpdateFinished
             opacity: 0
 
             MouseArea{
@@ -93,24 +168,23 @@ Rectangle {
                 PropertyAnimation  {properties: "opacity"; duration: 600; easing.type: Easing.Linear  }
             }
 
-            BorderImage{
+            //            BorderImage{
 
-                id:btnstop
+            //                id:btnstop
 
-                width: 40
-                height: 40
-                anchors.left: parent.left
-                anchors.leftMargin: 30
-                anchors.verticalCenter: parent.verticalCenter
-                source: "qrc:/images/stop.png"
-
-            }
+            //                width: 40
+            //                height: 40
+            //                anchors.left: parent.left
+            //                anchors.leftMargin: 30
+            //                anchors.verticalCenter: parent.verticalCenter
+            //                source: "qrc:/images/stop.png"
+            //            }
 
             BorderImage{
                 id:btnRecordVideo
                 width: 34
                 height: 34
-                anchors.left: btnstop.right
+                anchors.left: parent.left
                 anchors.leftMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
                 source: mIsRecordVedio?"qrc:/images/recordVideo_ing.png":"qrc:/images/recordVideo_start.png"
@@ -142,10 +216,8 @@ Rectangle {
         Rectangle{
             id:screenBlack
             anchors.fill: parent
-            visible: !mIsUpdateStreamData
+            visible: !mIsUpdateFinished
             color: "black"
-
-
 
             QmlWaitingEllipsis{
 
@@ -186,9 +258,16 @@ Rectangle {
 
         onSignal_videoDataUpdate: {
 
-            console.debug("onSignal_videoDataUpdate")
-            mIsShowWait = false;
-            mIsUpdateStreamData = true;
+            console.debug("onSignal_videoDataUpdate"+isSucc)
+
+            if(isSucc){
+
+                    mIsUpdateFinished = true
+                    mIsShowWait = false;
+
+            }else{
+
+            }
         }
     }
 
@@ -250,8 +329,20 @@ Rectangle {
     function updatePar(){
 
         mIsShowWait = true;
-        mIsUpdateStreamData = false;
+        mIsUpdateFinished = false
+
+
         video.funUpdateTcpPar(mip,mport,mAcc,mPwd,mID)
+
+//        delayFun(5000,function f(){
+
+//            if(mIsUpdateFinished == false){
+
+//                mIsShowWait = false;
+//                s_showToastMsg("wait timeout");
+//            }
+//        })
+
     }
 }
 

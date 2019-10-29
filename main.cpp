@@ -51,6 +51,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
 
+    app.setOrganizationName("Gaozhi"); //1
+    app.setOrganizationDomain("gaozhi.com"); //2
+    app.setApplicationName("VMS_V1.2"); //3
 
     QFont font("arial",15);
     app.setFont(font);

@@ -18,9 +18,12 @@ Rectangle {
     signal winClose();
     signal dragPosChange(var mx,var my);
 
-    signal setFilePath();
+    signal s_systemConfiguration();
+    signal s_exit();
+    signal s_about();
+    signal s_help();
 
-    property var pathMapping : {"File path setting":"qrc:/images/filePath.png","about":"qrc:/images/about.png"}
+    property var pathMapping : {"system Configuration":"qrc:/images/systemConfig.png","exit system":"qrc:/images/exit.png","about":"qrc:/images/about.png","help":"qrc:/images/help.png"}
 
     Rectangle {
         anchors.fill: parent
@@ -115,12 +118,13 @@ Rectangle {
 
             Menu {
                 id: menu1
-                x:menuSys.x
+                x:menuSys.x + menuSys.width/2 - menu1.width/2
                 y:menuSys.y+menuSys.height
 
-                Action { text: qsTr("File path setting"); checkable: true }
+                Action { text: qsTr("system Configuration"); checkable: true }
                 Action { text: qsTr("about"); checkable: true; checked: true }
-
+                Action { text: qsTr("help"); checkable: true; checked: true }
+                Action { text: qsTr("exit system"); checkable: true; checked: true }
 
 
                 topPadding: 2
@@ -133,6 +137,7 @@ Rectangle {
 
                     indicator: Image {
                         id: name1
+                        anchors.verticalCenter: parent.verticalCenter
                         width: 32
                         height: 32
                         source: strToimg(menuItem.text)
@@ -142,40 +147,40 @@ Rectangle {
                         leftPadding: menuItem.indicator.width
                         rightPadding: menuItem.arrow.width
                         text: menuItem.text
-                        font: menuItem.font
+                        font.pixelSize: 12
+                        font.family: "PingFang-SC-Medium"
                         opacity: enabled ? 1.0 : 0.3
                         color: menuItem.highlighted ? "#ffffff" : "#000000"
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
                     }
 
                     background: Rectangle {
-                        implicitWidth: 200
+                        implicitWidth: 140
                         implicitHeight: 40
                         opacity: enabled ? 1 : 0.3
-                        color: menuItem.highlighted ? "#21be2b" : "transparent"
+                        color: menuItem.highlighted ? "#17abe3" : "transparent"
                     }
 
                     onTriggered: {
 
-                        if(menuItem.text === "File path setting")
-                            setFilePath();
-                        console.debug(  "menuItem "+menuItem.text)
+                        if(menuItem.text === "system Configuration")
+                            s_systemConfiguration()
+                        else if(menuItem.text === "exit system")
+                            s_exit();
 
                     }
                 }
-
                 background: Rectangle {
                     implicitWidth: 200
                     implicitHeight: 40
                     color: "#ffffff"
-                    border.color: "#21be2b"
+                    //border.color: "#7dc5eb"
                     radius: 2
                 }
 
 
-           }
+            }
 
             Rectangle{
                 width: 1

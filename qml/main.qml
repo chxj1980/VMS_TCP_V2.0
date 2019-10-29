@@ -77,13 +77,11 @@ Window {
                 else if(main.visibility === 4)
                     main.visibility = "Windowed"
 
-
             }
             onWinClose:Qt.quit();
             onDragPosChange:setDlgPoint(mx,my);
-
+            onS_systemConfiguration: config.visible = true
         }
-
         HomeStateBar{
 
             id:mhomeState
@@ -101,7 +99,6 @@ Window {
 
             }
         }
-
         HomeContent{
             id:mhomecontent
             anchors.top: mTitleBar.bottom
@@ -124,6 +121,16 @@ Window {
         }
 
 
+
+        SystemConfig{
+            id:config
+            anchors.top: mTitleBar.bottom
+            anchors.left: parent.left
+            width: parent.width
+            height: parent.height - mTitleBar.height -2
+            z:4
+
+        }
 
     }
 

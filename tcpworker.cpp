@@ -99,12 +99,15 @@ void TcpWorker::slot_timerConnectSer()
 void TcpWorker::slot_updateTcpPar(QString ip,QString port,QString acc,QString pwd,QString did)
 {
 
-    if(ip.compare(this->ip)!=0 || this->port != port.toInt() || acc.compare(m_usrName)!=0 || did.compare(m_did)!=0||pwd.compare(m_password)!=0){
+
+    //if(ip.compare(this->ip)!=0 || this->port != port.toInt() || acc.compare(m_usrName)!=0 || did.compare(m_did)!=0||pwd.compare(m_password)!=0){
         m_did = did;
         m_usrName = acc;
         m_password = pwd;
         this->ip = ip;
         this->port = port.toInt();
+
+
 
         if(tcpSocket == nullptr)
             creatNewTcpConnect(this->ip,this->port);
@@ -114,7 +117,7 @@ void TcpWorker::slot_updateTcpPar(QString ip,QString port,QString acc,QString pw
             isHavaData = false;
         }
 
-    }
+    //}
 }
 
 
@@ -431,12 +434,13 @@ void TcpWorker::parseRecevieData()
                 if(statuscode == 200){
                     emit signal_sendMsg(new MsgInfo(tr("Successful authentication"),true));
 
-                    emit signal_sendCurDid(m_did);
+                    emit signal_authentication(true);
                     //createFFmpegDecodec();
 
-                }else
+                }else{
                     emit signal_sendMsg(new MsgInfo(tr("Authentication failure"),true));
-
+                    emit signal_authentication(false);
+                }
                 //qDebug()<<"msgHex:"<<readDataBuff.toHex();
                 readDataBuff.remove(0,136);
                 needlen = 2;

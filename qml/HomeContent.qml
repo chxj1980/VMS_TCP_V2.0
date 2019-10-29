@@ -33,7 +33,7 @@ Rectangle {
             if(isConnected)
                 st_showToastMsg("mqtt服务器连接成功")
             else
-                st_showToastMsg("mqtt服务器连接失败")
+                st_showToastMsg(qsTr("mqtt服务器连接失败"))
         }
         onSignal_login: {
 
