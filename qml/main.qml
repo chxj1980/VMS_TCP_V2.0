@@ -2,7 +2,6 @@
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.12
 import QtQml 2.12
-import Qt.labs.settings 1.0
 
 Window {
 
@@ -40,7 +39,6 @@ Window {
 
     onVisibilityChanged: {
 
-        //console.debug(" HomeContent:"+mhomecontent.x  + "   "+ mhomecontent.y)
         if(isSpecilState){
             if(main.visibility === 2){
                 main.visibility = "Maximized"
@@ -50,14 +48,11 @@ Window {
 
     }
 
-    Settings{
-        id:systemSettings
 
 
-
-    }
     Rectangle{
         id:rect
+
 
         width: main.width
         height: main.height

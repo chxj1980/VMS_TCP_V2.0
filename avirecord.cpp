@@ -5,7 +5,7 @@ AviRecord::AviRecord(QString did)
 
     mDid = did;
     pwriteHandle = nullptr;
-
+    mRecordingFilePath = "";
 
 
 }
@@ -55,18 +55,27 @@ void AviRecord::slot_startRecord(QString did,long long pts)
     if(pwriteHandle != nullptr)
         return;
 
-    QString dir_str = "Avi_Record/"+did;
 
-    // 检查目录是否存在，若不存在则新建
+
     QDir dir;
-    if (!dir.exists(dir_str))
-    {
-        bool res = dir.mkpath(dir_str);
-        qDebug() << "新建目录是否成功:" << res;
-    }
+   if(mRecordingFilePath == ""){
+
+      mRecordingFilePath = dir.absolutePath() +"/Avi_Record";
+   }
+
+   QString desFileDir = mRecordingFilePath +"/" +did;
+
+
+   if (!dir.exists(desFileDir))
+   {
+       bool res = dir.mkpath(desFileDir);
+       qDebug() << "新建最终目录是否成功:" << res;
+   }
+
+
     startTime = QDateTime::currentDateTime().toMSecsSinceEpoch();
 
-    QString filename = "./Avi_Record/"+did + "/"+did+"_" + QString::number(startTime)+".avi";
+    QString filename = desFileDir+ "/"+did+"_" + QString::number(startTime)+".avi";
 
 
     QByteArray tmpArr = filename.toLatin1();
@@ -130,6 +139,9 @@ void AviRecord::slot_startRecord(QString did,long long pts)
     isInitSucc = true;
 }
 
+void AviRecord::slot_setAviSavePath(QString str){
+    mRecordingFilePath = str;
+}
 
 void AviRecord::slot_endRecord()
 {

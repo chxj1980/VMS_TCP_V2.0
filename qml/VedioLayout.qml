@@ -51,7 +51,7 @@ Rectangle {
                 //console.debug("VideoLivePlay onDoubleClick")
 
                 if( model.isMax > 0 )
-                     model.isMax = 0;
+                    model.isMax = 0;
                 else
                     model.isMax = 1;
 
@@ -65,10 +65,61 @@ Rectangle {
                 isCreateConnected = 0;
 
             }
+
+            onS_deviceInfo: {
+                console.debug("onS_deviceInfo       "+map)
+
+                deviceInfo.serip = map.ip
+                deviceInfo.serport = map.port
+                deviceInfo.serAcc = map.acc
+                deviceInfo.serPwd = map.pwd
+                deviceInfo.did = map.did
+                deviceInfo.open()
+
+            }
+            onS_mediaInfo: {
+
+
+                //    m_mediaInfo.insert("fps",map.value("fps").toInt());
+                //    m_mediaInfo.insert("rcmode",map.value("rcmode").toInt());
+                //    m_mediaInfo.insert("frametype",map.value("frametype").toInt());
+                //    m_mediaInfo.insert("staty0",map.value("staty0"));
+                //    m_mediaInfo.insert("width",map.value("width"));
+                //    m_mediaInfo.insert("height",map.value("height"));
+
+                //    m_mediaInfo.insert("samplerate",map.value("samplerate"));
+                //    m_mediaInfo.insert("prenum",map.value("prenum"));
+                //    m_mediaInfo.insert("bitwidth",map.value("bitwidth"));
+                //    m_mediaInfo.insert("soundmode",map.value("soundmode"));
+
+                mediaInfo.did = map.did
+                mediaInfo.fps = map.fps;
+                mediaInfo.rcmode = map.rcmode;
+                mediaInfo.frametype = map.frametype;
+                mediaInfo.staty0 = map.staty0;
+                mediaInfo.mwidth = map.width;
+                mediaInfo.mheight = map.height;
+
+                mediaInfo.samplerate = map.samplerate;
+                mediaInfo.prenum = map.prenum;
+                mediaInfo.bitwidth = map.bitwidth;
+                mediaInfo.soundmode = map.soundmode;
+
+                mediaInfo.open()
+
+
+            }
         }
 
     }
 
+    QmlDeviceInfo{
+        id:deviceInfo
+    }
+
+    QmlMediaInfo{
+        id:mediaInfo
+    }
     function updateTcpPar(pos){
 
         repeater.itemAt(pos).updatePar();

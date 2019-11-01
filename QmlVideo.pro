@@ -45,7 +45,8 @@ HEADERS += \
     p2p/p2pworker.h \
     mqtt/mqttpacket.h \
     mqtt/mqttwork.h \
-    systemattributes.h
+    systemattributes.h \
+    classQml/Timeline.h
 
 SOURCES += main.cpp \
     qmllanguage.cpp \
@@ -67,7 +68,8 @@ SOURCES += main.cpp \
     VideoManagement/mp4format.cpp \
     p2p/p2pworker.cpp \
     mqtt/mqttpacket.cpp \
-    mqtt/mqttwork.cpp
+    mqtt/mqttwork.cpp \
+    classQml/Timeline.cpp
 
 
 

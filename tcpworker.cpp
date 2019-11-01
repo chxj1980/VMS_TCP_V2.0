@@ -243,6 +243,8 @@ int TcpWorker::saveAudioInfo(QByteArray &arr)
     memcpy(&infoA,arr.data(),sizeof (QueueAudioInputInfo_T));
     arr.remove(0,index);
 
+
+
     return datalen;
 }
 
@@ -351,8 +353,18 @@ void TcpWorker::parseRecevieData()
                 quint64 ptsH = 0x00000000ffffffff & infoV.highPts;
                 quint64 ptsL = 0x00000000ffffffff & infoV.lowPts;
                 quint64 pts = ptsH *256 *255*256 + ptsL;
-                emit signal_sendH264(readDataBuff.data(),m_streamDateLen,pts);
 
+                QVariantMap map;
+
+                map.insert("fps",infoV.fps);
+                map.insert("rcmode",infoV.rcmode);
+                map.insert("frametype",infoV.staty0);
+                map.insert("width",infoV.reslution.width);
+                map.insert("height",infoV.reslution.height);
+                map.insert("bitrate",infoV.bitrate);
+
+
+                emit signal_sendH264(readDataBuff.data(),m_streamDateLen,pts,map);
 
                 readDataBuff.remove(0,m_streamDateLen);
                 resetAVFlag();
@@ -394,13 +406,24 @@ void TcpWorker::parseRecevieData()
             if(m_streamDateLen > 0 && readDataBuff.length()>=needlen)
             {
                 //audioSrc->write(readDataBuff.data(),m_streamDateLen);
-
+                QVariantMap map;
+                map.insert("samplerate",infoA.samplerate);
+                map.insert("prenum",infoA.prenum);
+                map.insert("bitwidth",infoA.bitwidth);
+                map.insert("soundmode",infoA.soundmode);
 
                 quint64 ptsH = 0x00000000ffffffff & infoA.highPts;
                 quint64 ptsL = 0x00000000ffffffff & infoA.lowPts;
                 quint64 pts = ptsH *256 *255*256 + ptsL;
 
-                emit signal_sendPcmALaw(readDataBuff.data(),m_streamDateLen,pts);
+                emit signal_sendPcmALaw(readDataBuff.data(),m_streamDateLen,pts,map);
+
+
+
+
+
+
+
 
                 QThread::msleep(10);
 

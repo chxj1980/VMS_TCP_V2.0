@@ -150,7 +150,7 @@ QImage* FfmpegCodec::decodeVFrame(uint8_t *buff,int bufflen)
     m_AVPacket.data = buff;
     m_AVPacket.size = bufflen;
 
-    qDebug()<<"1111111111";
+   // qDebug()<<"1111111111";
     if( avcodec_send_packet(m_pVCodecCtx,&m_AVPacket) == 0)
     {
 
@@ -161,7 +161,7 @@ QImage* FfmpegCodec::decodeVFrame(uint8_t *buff,int bufflen)
             AVPixelFormat pixFormat;
 
 
-             qDebug()<<"22222222222222";
+            // qDebug()<<"22222222222222";
             switch (m_pVCodecCtx->pix_fmt)
             {
             case AV_PIX_FMT_YUVJ420P:
@@ -181,10 +181,10 @@ QImage* FfmpegCodec::decodeVFrame(uint8_t *buff,int bufflen)
             }
             //
 
-             qDebug()<<"3333333333333";
+            // qDebug()<<"3333333333333";
             if (mWidth !=  m_pVCodecCtx->width || m_pVCodecCtx->height!= mHeight){
 
-                 qDebug()<<"3333333333333``````````"<<"   "<<m_pVCodecCtx->width<<"   "<<m_pVCodecCtx->height;;
+                 //qDebug()<<"3333333333333``````````"<<"   "<<m_pVCodecCtx->width<<"   "<<m_pVCodecCtx->height;;
                 mWidth = m_pVCodecCtx->width;
                 mHeight = m_pVCodecCtx->height;
 
@@ -198,14 +198,10 @@ QImage* FfmpegCodec::decodeVFrame(uint8_t *buff,int bufflen)
                 m_pVoutBuffer = (uint8_t *)av_malloc(size);
                 avpicture_fill((AVPicture *)m_pVFrameBGR, m_pVoutBuffer, AV_PIX_FMT_RGB32, m_pVCodecCtx->width, m_pVCodecCtx->height); // allocator memory for BGR buffer
             }
-             qDebug()<<"4444444444444444";
 
-
-            qDebug()<<"***first_time*** 2"<<pixFormat<<"   "<<m_pVCodecCtx->width<<"   "<<m_pVCodecCtx->height;
+           // qDebug()<<"***first_time*** 2"<<pixFormat<<"   "<<m_pVCodecCtx->width<<"   "<<m_pVCodecCtx->height;
             sws_scale(m_pImg_convert_ctx, (const uint8_t* const*)m_pAVFrame->data, m_pAVFrame->linesize, 0, m_pVCodecCtx->height, m_pVFrameBGR->data, m_pVFrameBGR->linesize);
 
-
-             qDebug()<<"5555555555555555";
             QImage *pImage = nullptr;
             try {
 
@@ -217,7 +213,7 @@ QImage* FfmpegCodec::decodeVFrame(uint8_t *buff,int bufflen)
                 qDebug()<<"图片分配内存失败     ";
                 return nullptr;
             }
-             qDebug()<<"66666666666666666";
+            // qDebug()<<"66666666666666666";
 
             return pImage;
 

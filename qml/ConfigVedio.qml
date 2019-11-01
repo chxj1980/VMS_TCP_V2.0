@@ -3,9 +3,14 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.3
 import QtQuick 2.1
-
+import Qt.labs.settings 1.0
 
 Rectangle {
+
+    Component.onCompleted: {
+        inputS.text = systemAttributes.screenshotFilePath
+        inputR.text = systemAttributes.recordVedioFilePath
+    }
 
 
     Column{
@@ -111,6 +116,12 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
 
                 model: ["jpeg", "png"]
+
+                Component.onCompleted: currentIndex = systemAttributes.screenshotFileFormat
+
+                onCurrentTextChanged:
+                    systemAttributes.setscreenshotFileFormat(currentIndex)
+
             }
 
         }
@@ -129,9 +140,14 @@ Rectangle {
 
             QmlSpinBox{
                 id:spinbox
-
+                Component.onCompleted: spinbox.value = systemAttributes.recordVedioTime
+                to:30
                 anchors.verticalCenter: parent.verticalCenter
                 myColor: "gray"
+
+                onValueChanged: {
+                    systemAttributes.setrecordVedioTime(value)
+                }
             }
 
             Text {
@@ -158,11 +174,11 @@ Rectangle {
 
                 var str = fileDialog.fileUrl.toString();
                 inputS.text = str.replace('file:///','');
-
+                systemAttributes.setscreenshotFilePath(inputS.text.toString())
 
             }else if(pathname === labelR.text.toString()){
                 inputR.text = fileDialog.fileUrl.toString().replace('file:///','');
-
+                systemAttributes.setrecordVedioFilePath(inputR.text.toString())
             }
 
         }

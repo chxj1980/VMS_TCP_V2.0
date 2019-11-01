@@ -22,6 +22,7 @@ public slots:
     void slot_writeVedio(char *buff,int len,long long tempTime);
     void slot_endRecord();
     void slot_startRecord(QString did,long long pts);
+    void slot_setAviSavePath(QString str);
 private:
     int RecSetAVParam(MeidaVideo_T mediaInfo,void* pWriterHandle);
     int InitWriterHanle(void** pWriterHandle,MeidaVideo_T mediaInfo,char* fileName, char *idxName);
@@ -33,7 +34,7 @@ private:
     QString mDid;
     qint64 startTime;
     bool isInitSucc;
-    //RecordManage_T g_recordManage[DF_MAX_REC_NUM];
+    QString mRecordingFilePath;
 };
 
 #endif // AVIRECORD_H

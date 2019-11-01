@@ -17,27 +17,24 @@ Rectangle {
 
     Component.onCompleted: {
 
-        if(!systemSettings.isAutoLogin)//选中时checked为false
-            s_Login(setting1s.strIp.toString(),setting1s.strPort.toString(),setting1s.strAcc.toString(),setting1s.strPwd.toString())
+        inputacc.text = systemAttributes.tcpSerAccount
+        inputSerIp.text = systemAttributes.tcpSerIp
+        inputSerPort.text = systemAttributes.tcpSerPort
+        inputpwd.text = systemAttributes.tcpSerPassword
+        checkedRemPwd.checkedState = systemAttributes.tcpSerIsRemPwd
+        checkedAutoLogin.checkedState = systemAttributes.tcpSerIsAutoLogin
+        boxNetWorkType.currentIndex = systemAttributes.netwokType
+
+
+        if(systemAttributes.tcpSerIsRemPwd == 2)
+            inputpwd.text = ""
+        if(systemAttributes.tcpSerIsAutoLogin == 0)
+            s_Login(inputSerIp.text.toString(),inputSerPort.text.toString(),inputacc.text.toString(),inputpwd.text.toString())
     }
 
 
-    Settings{
-        id:setting1s
-//        property alias sFilePath: inputacc.text
-//        property alias rFilePath: inputpwd.text
-        property alias strAcc: inputacc.text
-        property string strPwd;
-        property alias strIp: inputSerIp.text
-        property alias strPort: inputSerPort.text
-        property alias isRemPwd:checkedRemPwd.checked
 
-    }
 
-    Settings{
-        id:systemSettings
-        property alias isAutoLogin:checkedAutoLogin.checked;
-    }
 
     Image{
         anchors.fill: parent
@@ -186,7 +183,6 @@ Rectangle {
 
                 textColor: "#999999"
                 placeholderText: qsTr("enter password")
-                text:setting1s.strPwd//admin
                 style:TextFieldStyle {
                     textColor: "black"
                     background: Rectangle {
@@ -218,13 +214,9 @@ Rectangle {
             anchors.rightMargin: 5
             anchors.top: rectPwd.bottom
             anchors.topMargin: 10
-            onCheckedChanged: {
-                console.debug("login onCheckedChanged  "+checked + "   "+systemSettings.isAutoLogin)
-            }
             text: "Auto login"
             indImg:"qrc:/images/client_remPwd.png"
             indImgPressed: "qrc:/images/client_remPwd_S.png"
-
         }
 
         Text {
@@ -309,12 +301,13 @@ Rectangle {
             text: "Sign in"
 
             onClicked:{
-
-                if(checkedRemPwd.checked){
-                    setting1s.strPwd = ""
-                }else{
-                    setting1s.strPwd = inputpwd.text.toString();
-                }
+                systemAttributes.settcpSerAccount(inputacc.text.toString())
+                systemAttributes.settcpSerIp(inputSerIp.text.toString())
+                systemAttributes.settcpSerPassword(inputpwd.text.toString())
+                systemAttributes.settcpSerPort(inputSerPort.text.toString())
+                systemAttributes.settcpSerIsRemPwd(checkedRemPwd.checkedState)
+                systemAttributes.settcpSerIsAutoLogin(checkedAutoLogin.checkedState)
+                systemAttributes.setnetwokType(boxNetWorkType.currentIndex)
 
                 s_Login(inputSerIp.text.toString(),inputSerPort.text.toString(),inputacc.text.toString(),inputpwd.text.toString())
             }

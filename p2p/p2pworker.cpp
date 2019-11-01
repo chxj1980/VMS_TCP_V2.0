@@ -303,8 +303,8 @@ void P2pWorker::processUnPkg(char *buff,int len)
                 int vstreamLen = frameHeader->frame_len;
 
                 // qDebug()<<"找到  视频信息 1:"<<vstreamLen<<"  "<<arr.toHex();
-
-                emit signal_sendH264(arr.data() + sizeof(video_frame_header), vstreamLen,1000);
+                QVariantMap map;
+                emit signal_sendH264(arr.data() + sizeof(video_frame_header), vstreamLen,1000,map);
                 //qDebug()<<"发送   signal_sendH264:";
             }else if(m_cmd == CMD_AUDIO_TRNS){
                 // qDebug()<<"找到  音频信息:"<<needLen<<"   "<<readDataBuff.length();
@@ -314,8 +314,8 @@ void P2pWorker::processUnPkg(char *buff,int len)
                 video_frame_header *video_pack= (video_frame_header*)(readDataBuff.data());
 
                 usr_decode(arr.data(), arr.length(),m_serverKey, serverKeyLen);
-
-                emit signal_sendPcmALaw(arr.data(), arr.length(),1000);
+                QVariantMap map;
+                emit signal_sendPcmALaw(arr.data(), arr.length(),1000,map);
 
             }
 

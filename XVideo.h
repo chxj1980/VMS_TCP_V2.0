@@ -33,7 +33,7 @@ public:
     public: type getter() const { return m_##name;} \
     public Q_SLOTS: void setter(type arg) { m_##name = arg; emit notifyer(arg);} \
     Q_SIGNALS:  \
-        void notifyer(type arg);\
+    void notifyer(type arg);\
     private:
 
 class XVideo : public QQuickItem
@@ -44,8 +44,10 @@ class XVideo : public QQuickItem
     QML_PROPERTY(int,isAuthenticationSucc, READ, isAuthenticationSucc, WRITE, setisAuthenticationSucc, NOTIFY, isAuthenticationSuccChanged)//鉴权成功则判断视频流即将更新
 
     //媒体信息属性
-    QML_PROPERTY(int ,mediaVedioW, READ, mediaVedioW, WRITE, setmediaVedioW, NOTIFY, mediaVedioWChanged)
-    QML_PROPERTY(int ,mediaVedioH, READ, mediaVedioH, WRITE, setmediaVedioH ,NOTIFY, mediaVedioHChanged)
+    QML_PROPERTY(QVariantMap ,mediaInfo, READ, mediaInfo, WRITE, setmediaInfo, NOTIFY, mediaInfoChanged)
+
+    //设备信息
+    QML_PROPERTY(QVariantMap ,deviceInfo, READ, deviceInfo, WRITE, setdeviceInfo, NOTIFY, deviceInfoChanged)
 
     //系统属性
     QML_PROPERTY(QString, shotScreenPath, READ ,shotScreenPath, WRITE ,setshotScreenPath, NOTIFY ,shotScreenPathChanged)
@@ -60,6 +62,8 @@ public:
     Q_INVOKABLE void funScreenShot();
     Q_INVOKABLE void funUpdateTcpPar(QString ip,QString port,QString acc,QString pwd,QString did);
 
+    Q_INVOKABLE void funSetShotScrennFilePath(QString str);
+    Q_INVOKABLE void funSetRecordingFilePath(QString str);
 
     explicit XVideo();
     ~XVideo();
@@ -90,6 +94,7 @@ signals:
     void signal_recordVedio(char *buff,int len,long long tempTime);
     void signal_startRecord(QString did,long long tempTime);
     void signal_endRecord();
+    void signal_setRecordingFilePath(QString str);
 
 
 
@@ -101,8 +106,8 @@ public slots:
 
     void slot_sendToastMsg(MsgInfo *msg);//经过dispatchMsgManager后出来消息
     void slot_recMsg(MsgInfo *msg);//所有其他类的消息都先到此
-    void slot_recH264(char *buff,int len,quint64 time);
-    void slot_recPcmALaw(char *buff,int len,quint64 time);
+    void slot_recH264(char *buff,int len,quint64 time,QVariantMap map);
+    void slot_recPcmALaw(char *buff,int len,quint64 time,QVariantMap map);
     void slot_authentication(bool isSucc);
 
     void slot_reconnectP2p();
@@ -165,7 +170,6 @@ private:
     bool isAudioFirstPlay;
     bool isFirstData;
 
-
     quint64 preAudioTime;
 
 
@@ -175,6 +179,7 @@ private:
     QString mDid;
     QString mAccount;
     QString mPassword;
+    QString mshotScreenFilePath;//有用
 
 };
 

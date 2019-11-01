@@ -54,7 +54,7 @@ void XVideo::initVariable()
 
     pffmpegCodec = nullptr;
 
-
+    mshotScreenFilePath = "";
 
     isImgUpdate  = false;
     isPlayAudio = false;
@@ -126,7 +126,7 @@ void XVideo::createAviRecord()
         connect(this,&XVideo::signal_recordVedio,aviRecord,&AviRecord::slot_writeVedio);
         connect(this,&XVideo::signal_startRecord,aviRecord,&AviRecord::slot_startRecord);
         connect(this,&XVideo::signal_endRecord,aviRecord,&AviRecord::slot_endRecord);
-
+        connect(this,&XVideo::signal_setRecordingFilePath,aviRecord,&AviRecord::slot_setAviSavePath);
         connect(recordThread,&QThread::finished,aviRecord,&AviRecord::deleteLater);
         connect(recordThread,&QThread::finished,recordThread,&QThread::deleteLater);
         aviRecord->moveToThread(recordThread);
@@ -267,18 +267,28 @@ void XVideo::funScreenShot()
     isScreenShot = true;
     if(m_Img != nullptr && (!m_Img->isNull())){
 
-        QString dir_str = "ScreenShot/"+mDid;
+        QString filename;
 
-        // 检查目录是否存在，若不存在则新建
         QDir dir;
-        if (!dir.exists(dir_str))
+        if(mshotScreenFilePath == ""){
+
+            mshotScreenFilePath = dir.absolutePath() +"/ScreenShot";
+        }
+        QString desFileDir = mshotScreenFilePath +"/" +mDid;
+        if (!dir.exists(desFileDir))
         {
-            bool res = dir.mkpath(dir_str);
-            qDebug() << "新建目录是否成功:" << res;
+            bool res = dir.mkpath(desFileDir);
+            qDebug() << "新建最终目录是否成功:" << res;
         }
 
+
         QString curTimeStr = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
-        QString filename = "./ScreenShot/"+mDid + "/"+mDid+"_" + curTimeStr+".png";
+        QString tmpFileName = mDid+"_" + curTimeStr+".png";
+
+
+        filename = desFileDir + "/"+tmpFileName;
+
+        qDebug()<<" filename    "<<filename;
 
         if(m_Img->save(filename,0))
             qDebug()<<"图片保存成功";
@@ -289,9 +299,13 @@ void XVideo::funScreenShot()
 
 void XVideo::funUpdateTcpPar(QString ip,QString port,QString acc,QString pwd,QString did){
 
-
+    m_mediaInfo.insert("did",did);
+    m_deviceInfo.insert("ip",ip);
+    m_deviceInfo.insert("port",port);
+    m_deviceInfo.insert("acc",acc);
+    m_deviceInfo.insert("pwd",pwd);
+    m_deviceInfo.insert("did",did);
     emit signal_updateTcpPar(ip,port,acc,pwd,did);
-
 }
 void XVideo::slot_timeout()
 {
@@ -445,11 +459,17 @@ QSGNode* XVideo::updatePaintNode(QSGNode *old, UpdatePaintNodeData *data)
 
 
 //tcpworker 线程
-void XVideo::slot_recH264(char* h264Arr,int arrlen,quint64 time)
+void XVideo::slot_recH264(char* h264Arr,int arrlen,quint64 time,QVariantMap map)
 {
 
+    m_mediaInfo.insert("fps",map.value("fps").toInt());
+    m_mediaInfo.insert("rcmode",map.value("rcmode").toInt());
+    m_mediaInfo.insert("frametype",map.value("frametype").toInt());
+    m_mediaInfo.insert("staty0",map.value("staty0").toString());
+    m_mediaInfo.insert("width",map.value("width").toString());
+    m_mediaInfo.insert("height",map.value("height").toString());
 
-    //qDebug()<<"11111111111";
+    //当流数据来时才开始创建ffmpeg解码
     createFFmpegDecodec();
 
     emit signal_recordVedio(h264Arr,arrlen,time);
@@ -493,11 +513,17 @@ void XVideo::slot_authentication(bool isSucc)
 
 
 //tcpworker 线程
-void XVideo::slot_recPcmALaw( char * buff,int len,quint64 time)
-{
-    preAudioTime = time;
-    createFFmpegDecodec();
+void XVideo::slot_recPcmALaw(char * buff,int len,quint64 time,QVariantMap map)
+{    
+    m_mediaInfo.insert("samplerate",map.value("samplerate").toString());
+    m_mediaInfo.insert("prenum",map.value("prenum").toString());
+    m_mediaInfo.insert("bitwidth",map.value("bitwidth").toString());
+    m_mediaInfo.insert("soundmode",map.value("soundmode").toString());
 
+
+    preAudioTime = time;
+    //当流数据来时才开始创建ffmpeg解码
+    createFFmpegDecodec();
     emit signal_recordAudio(buff,len,time);
 
     //声卡准备
@@ -515,7 +541,14 @@ void XVideo::slot_recPcmALaw( char * buff,int len,quint64 time)
         }
     }
 }
-
+void XVideo::funSetShotScrennFilePath(QString str)
+{
+    mshotScreenFilePath = str;
+}
+void XVideo::funSetRecordingFilePath(QString str)
+{
+    emit signal_setRecordingFilePath(str);
+}
 void XVideo::slot_recMsg(MsgInfo * msg)
 {
 
@@ -523,7 +556,6 @@ void XVideo::slot_recMsg(MsgInfo * msg)
         msg->msgDid = mDid;
         mpDispatchMsgManager->addMsg(msg);
     }
-
 
 }
 

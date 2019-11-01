@@ -41,8 +41,6 @@ Popup {
             radius: 8
         }
 
-
-
         //设置标题栏区域为拖拽区域
         Rectangle{
             id:rectTitle
@@ -57,6 +55,7 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
                 source: "qrc:/images/modifyPwd.png"
             }
+
             Text {
                 id:title
                 text: qsTr("modify password")
@@ -65,7 +64,6 @@ Popup {
                 anchors.verticalCenter: parent.verticalCenter
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
-
             }
 
             MouseArea {

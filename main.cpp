@@ -7,6 +7,7 @@
 #include "ccrashstack.h"
 #include "systemattributes.h"
 #include "mqtt/mqttwork.h"
+#include "classQml/Timeline.h"
 
 
 long __stdcall   callback(_EXCEPTION_POINTERS*   excp)
@@ -50,15 +51,12 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
+    SystemAttributes attributes;
+    engine.rootContext()->setContextProperty("systemAttributes", &attributes);
 
     app.setOrganizationName("Gaozhi"); //1
     app.setOrganizationDomain("gaozhi.com"); //2
     app.setApplicationName("VMS_V1.2"); //3
-
-
-
-    SystemAttributes attributes;
-    engine.rootContext()->setContextProperty("systemAttributes", &attributes);
 
 
     QFont font("arial",15);
@@ -67,6 +65,7 @@ int main(int argc, char *argv[])
     SetUnhandledExceptionFilter(callback);
     QmlLanguage qmlLanguage(app, engine);
     engine.rootContext()->setContextProperty("qmlLanguage", &qmlLanguage);
+    qmlRegisterType<TimeLine>("TimeLine", 1, 0, "TimeLine");
 
     qmlRegisterType<MqttWork>("MqttWork", 1, 0, "MqttWork");
     // XVideo 为QPaint显示视频(光栅绘图)

@@ -45,8 +45,8 @@ public:
 signals:
 
 
-    void signal_sendH264(char* vH264Arr,int arrLen,long long pts);
-    void signal_sendPcmALaw(char* PcmALawArr,int arrLen,long long pts);
+    void signal_sendH264(char* vH264Arr,int arrLen,long long pts,QVariantMap map);
+    void signal_sendPcmALaw(char* PcmALawArr,int arrLen,long long pts,QVariantMap map);
 
     void signal_loopEnd();
     void signal_sendMsg(MsgInfo *info);

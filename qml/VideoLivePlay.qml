@@ -10,6 +10,8 @@ Rectangle {
     signal click();
     signal s_showToastMsg(string str)
     signal s_deleteObject()
+    signal s_mediaInfo(var map)
+    signal s_deviceInfo(var map)
 
     property string mip: ""
     property string mport: ""
@@ -22,16 +24,21 @@ Rectangle {
     property bool mIsRecordVedio: false
     property bool mIsShowWait: false
 
+
+    //qrc:/images/mediaInfo.png qrc:/images/deviceInfo.png
+
     border.color: mIsSelected?"red":"white"
     border.width: 2
     onMIsPlayAudioChanged: if(mIsPlayAudio)video.funPlayAudio(mXVideoPlayAudio)
     Menu {
         id: menu1
 
-        Action { text: qsTr("system Configuration"); checkable: true }
-        Action { text: qsTr("exit system"); checkable: true; checked: true }
-        Action { text: qsTr("about"); checkable: true; checked: true }
-        Action { text: qsTr("help"); checkable: true; checked: true }
+        property var pathMapping : {"device infomation":"qrc:/images/deviceInfo.png","media infomation":"qrc:/images/mediaInfo.png"}
+
+        Action { text: qsTr("device infomation"); checkable: true }
+        Action { text: qsTr("media infomation"); checkable: true; checked: true }
+        //        Action { text: qsTr("about"); checkable: true; checked: true }
+        //        Action { text: qsTr("help"); checkable: true; checked: true }
 
         topPadding: 2
         bottomPadding: 2
@@ -44,9 +51,9 @@ Rectangle {
             indicator: Image {
                 id: name1
                 anchors.verticalCenter: parent.verticalCenter
-                width: 32
-                height: 32
-                //source: strToimg(menuItem.text)
+                width: 24
+                height: 24
+                source: strToimg(menuItem.text)
             }
 
             contentItem: Text {
@@ -65,12 +72,15 @@ Rectangle {
                 implicitWidth: 140
                 implicitHeight: 40
                 opacity: enabled ? 1 : 0.3
-                color: menuItem.highlighted ? "#dbdbdb" : "transparent"
+                color: menuItem.highlighted ? "#8a8a8a" : "transparent"
             }
 
             onTriggered: {
 
-
+                if(menuItem.text === "device infomation")
+                    s_deviceInfo(video.deviceInfo)
+                else if(menuItem.text === "media infomation")
+                    s_mediaInfo(video.mediaInfo)
             }
         }
 
@@ -81,12 +91,20 @@ Rectangle {
             //border.color: "#7dc5eb"
             radius: 2
         }
-   }
+
+
+    }
 
     XVideo{
         id:video
         anchors.fill: parent
         anchors.margins: 2
+        shotScreenPath:systemAttributes.screenshotFilePath
+        recordScreenPath:systemAttributes.recordVedioFilePath
+
+        onShotScreenPathChanged:funSetShotScrennFilePath(recordScreenPath);
+
+        onRecordScreenPathChanged:funSetRecordingFilePath(recordScreenPath)
 
         MouseArea{
             anchors.fill: parent
@@ -96,15 +114,15 @@ Rectangle {
             onClicked:{
 
                 if (mouse.button == Qt.RightButton) { // 右键菜单
+
+                    if(!mIsUpdateFinished)
+                        return
                     menu1.x = root.x
                     menu1.y = root.y
                     menu1.popup();
 
                 }else if(mouse.button == Qt.LeftButton)
                     click();
-
-
-
             }
 
             onDoubleClicked: doubleClick(true);
@@ -262,8 +280,8 @@ Rectangle {
 
             if(isSucc){
 
-                    mIsUpdateFinished = true
-                    mIsShowWait = false;
+                mIsUpdateFinished = true
+                mIsShowWait = false;
 
             }else{
 
@@ -334,14 +352,14 @@ Rectangle {
 
         video.funUpdateTcpPar(mip,mport,mAcc,mPwd,mID)
 
-//        delayFun(5000,function f(){
+        //        delayFun(5000,function f(){
 
-//            if(mIsUpdateFinished == false){
+        //            if(mIsUpdateFinished == false){
 
-//                mIsShowWait = false;
-//                s_showToastMsg("wait timeout");
-//            }
-//        })
+        //                mIsShowWait = false;
+        //                s_showToastMsg("wait timeout");
+        //            }
+        //        })
 
     }
 }

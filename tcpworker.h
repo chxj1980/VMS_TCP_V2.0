@@ -22,7 +22,7 @@
 #include "dispatchmsgmanager.h"
 
 #include "mqtt/mqttwork.h"
-
+#include <QMap>
 #define MAX_AUDIO_FRAME_SIZE 192000
 
 class TcpWorker : public QObject
@@ -35,8 +35,8 @@ public:
 
 signals:
 
-    void signal_sendH264(char* vH264Arr,int arrLen,long long pts);
-    void signal_sendPcmALaw(char* PcmALawArr,int arrLen,long long pts);
+    void signal_sendH264(char* vH264Arr,int arrLen,long long pts,QVariantMap map);
+    void signal_sendPcmALaw(char* PcmALawArr,int arrLen,long long pts,QVariantMap map);
     void signal_sendPreparePlayAudio(int samplerate,int prenum,int bitwidth,int soundmode,long pts);
     void signal_authentication(bool str);
 

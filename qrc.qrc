@@ -104,5 +104,9 @@
         <file>qml/QmlDialogTip.qml</file>
         <file>images/error.png</file>
         <file>images/warn.png</file>
+        <file>images/deviceInfo.png</file>
+        <file>images/mediaInfo.png</file>
+        <file>qml/QmlMediaInfo.qml</file>
+        <file>qml/QmlDeviceInfo.qml</file>
     </qresource>
 </RCC>

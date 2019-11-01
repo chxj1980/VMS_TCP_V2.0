@@ -8,7 +8,6 @@ SpinBox {
     value: 50
     editable: true
 
-
     contentItem: TextInput {
         z: 2
         text: control.textFromValue(control.value, control.locale)

@@ -88,22 +88,6 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 10
             QmlImageButton{
-                width: 36
-                height: 36
-                imgSourseHover: "qrc:/images/flush_enter.png"
-                imgSourseNormal: "qrc:/images/flush.png"
-                imgSoursePress: "qrc:/images/flush_enter.png"
-
-            }
-            QmlImageButton{
-                width: 36
-                height: 36
-                imgSourseHover: "qrc:/images/msg_enter.png"
-                imgSourseNormal: "qrc:/images/msg.png"
-                imgSoursePress: "qrc:/images/msg_enter.png"
-
-            }
-            QmlImageButton{
                 id:menuSys
                 width: 36
                 height: 36
